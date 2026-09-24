@@ -32,9 +32,11 @@ export async function resetDb() {
   console.log("✓ Database reset to clean demo state!");
 }
 
-export async function seed() {
+export async function seed(skipInit: boolean = false) {
   console.log("🌱 Initializing and seeding Paytm TaskMate database...");
-  await initDb();
+  if (!skipInit) {
+    await initDb();
+  }
   const db = getDb();
 
   const demoUserId = "demo-user-1";

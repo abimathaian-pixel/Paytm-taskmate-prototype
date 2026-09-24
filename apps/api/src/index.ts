@@ -49,6 +49,27 @@ app.use(
   })
 );
 
+app.get("/", (c) =>
+  c.json({
+    status: "ok",
+    service: "Paytm TaskMate API Server",
+    version: "1.0.0",
+    health: "/health",
+    endpoints: {
+      health: "GET /health",
+      bills: "GET /api/bills",
+      user: "GET /api/user",
+      transactions: "GET /api/transactions",
+      mandates: "GET /api/mandates",
+      reminders: "GET /api/reminders",
+      audit: "GET /api/audit",
+      chat: "POST /api/chat",
+      demoScenario: "GET/POST /api/demo/scenario",
+      reset: "POST /api/reset",
+    },
+  })
+);
+
 app.get("/health", (c) => c.json({ status: "ok", service: "api" }));
 
 // INNGEST WORKFLOW ENDPOINT
@@ -567,13 +588,16 @@ app.post("/api/reset", async (c) => {
 
 const port = Number(process.env.PORT || 4000);
 
-async function start() {
-  await initDb();
+// Initialize DB schema & seed on startup
+initDb().catch((err) => {
+  console.error("Database initialization error:", err);
+});
+
+// If running in standalone Node.js environment (not Vercel Serverless)
+if (!process.env.VERCEL) {
   serve({ fetch: app.fetch, port }, () => {
     console.log(`🚀 Paytm TaskMate Hono API listening on http://localhost:${port}`);
   });
 }
 
-start().catch((err) => {
-  console.error("API failed to start:", err);
-});
+export default app;

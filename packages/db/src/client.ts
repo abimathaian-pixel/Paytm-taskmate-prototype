@@ -1,10 +1,12 @@
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { eq } from "drizzle-orm";
 import pg from "pg";
 import * as schema from "./schema.js";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 
 let dbInstance: any = null;
 let pgliteInstance: PGlite | null = null;
@@ -41,6 +43,16 @@ export function getDb() {
   if (!pgliteInstance) {
     if (process.env.TASKMATE_DATA_DIR === "memory://" || process.env.NODE_ENV === "test") {
       pgliteInstance = new PGlite();
+    } else if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      // In serverless environments (e.g. Vercel), the function root /var/task is read-only.
+      // Use /tmp/taskmate_pglite which is writable.
+      try {
+        const tmpDir = process.env.TASKMATE_DATA_DIR || path.join(os.tmpdir(), "taskmate_pglite");
+        fs.mkdirSync(tmpDir, { recursive: true });
+        pgliteInstance = new PGlite(tmpDir);
+      } catch {
+        pgliteInstance = new PGlite();
+      }
     } else {
       try {
         const root = findWorkspaceRoot();
@@ -48,7 +60,6 @@ export function getDb() {
         fs.mkdirSync(dataDir, { recursive: true });
         pgliteInstance = new PGlite(dataDir);
       } catch (e) {
-        console.warn("Falling back to in-memory database instance:", e);
         pgliteInstance = new PGlite();
       }
     }
@@ -188,6 +199,20 @@ export async function initDb() {
       await client.query(createTablesSql);
       await client.end();
     }
+  }
+
+  // Auto-seed demo data if demo user does not exist yet (e.g. cold start on Vercel / clean instance)
+  try {
+    const existing = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, "demo-user-1"));
+    if (existing.length === 0) {
+      const { seed } = await import("./seed.js");
+      await seed(true);
+    }
+  } catch (err) {
+    // Non-fatal
   }
 
   return db;
