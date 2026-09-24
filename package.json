@@ -1,0 +1,28 @@
+{
+  "name": "paytm-taskmate",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "typecheck": "turbo run typecheck",
+    "db:seed": "pnpm --filter @taskmate/db run seed",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.4",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7",
+    "@types/node": "^22.13.9",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.39.3",
+    "@playwright/test": "^1.50.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

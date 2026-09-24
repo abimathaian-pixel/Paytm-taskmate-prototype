@@ -1,0 +1,29 @@
+{
+  "name": "@taskmate/agent",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@taskmate/shared": "workspace:*",
+    "@taskmate/tools": "workspace:*",
+    "@taskmate/db": "workspace:*",
+    "drizzle-orm": "^0.39.3",
+    "ai": "^4.1.48",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
