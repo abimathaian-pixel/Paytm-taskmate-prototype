@@ -16,7 +16,7 @@ import {
   HelpCircle,
   ReceiptText,
 } from "lucide-react";
-import { api } from "../../lib/api";
+import { api, API_BASE } from "../../lib/api";
 import { MockUpiModal } from "../../components/MockUpiModal";
 import { PaymentSuccessModal } from "../../components/PaymentSuccessModal";
 
@@ -100,8 +100,7 @@ function TaskMateContent() {
       sseRef.current.close();
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-    const sse = new EventSource(`${apiUrl}/api/events/${currentTaskId}`);
+    const sse = new EventSource(`${API_BASE}/api/events/${currentTaskId}`);
     sseRef.current = sse;
 
     sse.onmessage = (event) => {

@@ -593,11 +593,13 @@ initDb().catch((err) => {
   console.error("Database initialization error:", err);
 });
 
-// If running in standalone Node.js environment (not Vercel Serverless)
-if (!process.env.VERCEL) {
+// If running in standalone Node.js environment (not Vercel Serverless or imported)
+const isStandalone = !process.env.VERCEL && !process.env.NEXT_RUNTIME;
+if (isStandalone) {
   serve({ fetch: app.fetch, port }, () => {
     console.log(`🚀 Paytm TaskMate Hono API listening on http://localhost:${port}`);
   });
 }
 
+export { app };
 export default app;

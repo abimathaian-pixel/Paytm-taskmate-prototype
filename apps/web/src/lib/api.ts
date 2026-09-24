@@ -1,7 +1,7 @@
-const API_BASE =
+export const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
-    ? "https://paytm-taskmate-prototype-api-n1uz.vercel.app"
+    ? "https://paytm-taskmate-prototype-api.vercel.app"
     : "http://localhost:4000");
 
 export async function fetchJson(endpoint: string, options: RequestInit = {}) {
