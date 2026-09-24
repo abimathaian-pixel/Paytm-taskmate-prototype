@@ -72,30 +72,15 @@ importers:
 
   apps/web:
     dependencies:
-      '@taskmate/agent':
-        specifier: workspace:*
-        version: link:../../packages/agent
-      '@taskmate/api':
-        specifier: workspace:*
-        version: link:../api
-      '@taskmate/db':
-        specifier: workspace:*
-        version: link:../../packages/db
       '@taskmate/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@taskmate/tools':
-        specifier: workspace:*
-        version: link:../../packages/tools
       '@taskmate/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      hono:
-        specifier: ^4.7.2
-        version: 4.13.8
       lucide-react:
         specifier: ^0.475.0
         version: 0.475.0(react@19.3.0)
